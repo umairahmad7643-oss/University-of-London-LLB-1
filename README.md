@@ -1,1252 +1,296 @@
-import React, { useState } from 'react';
-import { ChevronDown, Mail, BookOpen, FileText, AlertCircle, User, ShoppingCart, MessageSquare } from 'lucide-react';
-
-export default function UoLLBGuide() {
-  const [activeSection, setActiveSection] = useState('home');
-  const [expandedLevel, setExpandedLevel] = useState(null);
-  const [expandedModule, setExpandedModule] = useState(null);
-
-  const scrollToSection = (sectionId) => {
-    setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>UoL LLB Guide | Exam Success Companion</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom Tailwind configuration to avoid conflicts -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            fadeIn: 'fadeIn 0.3s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              from: { opacity: '0', transform: 'translateY(-10px)' },
+              to: { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
     }
-  };
-
-  const levels = {
-    level4: {
-      title: 'Level 4 (Year 1)',
-      price: '1500 PKR per module',
-      modules: [
-        {
-          code: 'LA 1040',
-          name: 'Contract Law',
-          pattern: 'Attempt four questions from a choice of eight questions.',
-          topics: [
-            'Offer and Acceptance',
-            'Intention',
-            'Consideration',
-            'Misrepresentation',
-            'Mistake',
-            'Frustration',
-            'Breach of Contract'
-          ]
-        },
-        {
-          code: 'LA 1010',
-          name: 'Criminal Law',
-          pattern: 'Part A: Compulsory Question | Part B: Attempt three questions from a choice of six questions.',
-          topics: [
-            'Actus Reus & Mens Rea (Basics)',
-            'Rape',
-            'Offences Against Persons',
-            'Property Offences',
-            'Criminal Damage',
-            'Criminal Attempt',
-            'Participation in Crime'
-          ]
-        },
-        {
-          code: 'LA 1020',
-          name: 'Public Law',
-          pattern: 'Part A: Compulsory Question | Part B: Attempt three questions from a choice of seven questions.',
-          topics: [
-            'Rule of Law',
-            'Parliamentary Sovereignty',
-            'Royal Prerogative',
-            'Codified and Uncodified Constitution',
-            'Human Rights Act',
-            'Judicial Review'
-          ]
-        },
-        {
-          code: 'LA 1031',
-          name: 'Legal System and Method',
-          pattern: 'Part A: MCQs | Part B: Attempt two questions from a choice of six questions | Part C: Compulsory Question',
-          topics: [
-            'Judicial Precedent and Judicial Law Making',
-            'Statutory Interpretation'
-          ]
-        }
-      ]
-    },
-    level5: {
-      title: 'Level 5 (Year 2)',
-      price: '2000 PKR per module',
-      modules: [
-        {
-          code: 'LA 2001',
-          name: 'Tort Law',
-          pattern: 'Part A: Compulsory Question (Article by Francis Ng) | Part B: Attempt three questions from a choice of eight questions.',
-          note: 'For the article contact the number under about the founder section.',
-          topics: [
-            'Negligence (Duty of Care, Breach, Causation, Remoteness, Damages, Defences)',
-            'Psychiatric Harm',
-            'Pure Economic Loss (PEL)',
-            'Occupiers Liability Act (OLA)',
-            'Vicarious Liability',
-            'Nuisance (Public/Private) & Rylands v Fletcher'
-          ]
-        },
-        {
-          code: 'LA 2003',
-          name: 'Property Law',
-          pattern: 'Part A: Compulsory Question | Part B: Attempt at least one question | Part C: Attempt at least one question. You can choose to answer the last question from either Part A or Part B.',
-          topics: [
-            'Unregistered and Registered Land',
-            'Adverse Possession',
-            'Easements',
-            'Mortgage',
-            'Licenses and Leases',
-            'Co-ownership',
-            'Proprietary Estoppel'
-          ]
-        },
-        {
-          code: 'LA 2024',
-          name: 'EU Law',
-          required: true,
-          pattern: 'Answer four questions from a choice of eight questions.',
-          topics: [
-            'Essay: Direct Effect, Citizenship, Charter of Fundamental Rights, Preliminary Referencing',
-            'Problem: Direct Effect, Free movement of goods, Free movement of citizens and workers, Competition Policy, State Liability'
-          ]
-        },
-        {
-          code: 'LA 2029',
-          name: 'International Protection of Human Rights',
-          optional: true,
-          pattern: 'Attempt three questions from a choice of seven questions.',
-          topics: [
-            'Universalism vs Culturalism',
-            'Women\'s Rights (CEDAW)',
-            'Refugee Rights',
-            'Child Rights',
-            'Religious Discrimination',
-            'Genocide and Crimes Against Humanity'
-          ]
-        },
-        {
-          code: 'LA 2019',
-          name: 'Family Law',
-          optional: true,
-          pattern: 'Attempt four questions from a choice of eight questions.',
-          topics: [
-            'Relationship Status',
-            'Dissolution',
-            'Financial Matters',
-            'Domestic Abuse',
-            'Children and Parentage',
-            'State Intervention',
-            'Adoption'
-          ]
-        },
-        {
-          code: 'LA 2017',
-          name: 'Commercial Law',
-          optional: true,
-          pattern: 'Attempt three questions from a choice of six questions.',
-          topics: [
-            'Sales of Goods Act 1979',
-            'International Sales',
-            'Consumer Protection',
-            'Agency and Security'
-          ]
-        },
-        {
-          code: 'LA 2008',
-          name: 'Administrative Law',
-          optional: true,
-          pattern: 'Attempt three questions from a choice of six questions.',
-          topics: [
-            'Foundation: Theory of Administrative law',
-            'Government Processes',
-            'Judicial Review',
-            'Alternative Controls',
-            'Liability Rights'
-          ]
-        },
-        {
-          code: 'LA 2010',
-          name: 'Introduction to Criminology',
-          optional: true,
-          pattern: 'Contact for details',
-          topics: []
-        }
-      ]
-    },
-    level6: {
-      title: 'Level 6 (Final Year)',
-      price: '2500 PKR per module',
-      modules: [
-        {
-          code: 'LA 1011',
-          name: 'Jurisprudence',
-          required: true,
-          pattern: 'Part A: Compulsory | Part B: Attempt three questions from a choice of nine questions.',
-          topics: [
-            'Part A: Naturalism, Liberalism, Ronald Dworkin\'s Theory',
-            'Part B: Command Theory (John Austin), Marxism (Karl Marx), Pure Theory (Kelsen), Feminism, Distributive Theory (John Rawls)'
-          ]
-        },
-        {
-          code: 'LA 3015',
-          name: 'Equity and Trusts',
-          optional: true,
-          pattern: 'Part A: Compulsory (25 marks - Legal Article by Francis Ng) | Part B: Attempt three questions from a choice of eight questions.',
-          topics: [
-            'Three Certainties',
-            'Formalities',
-            'Constitution',
-            'Charitable Purpose Trusts',
-            'Private Purpose Trust',
-            'Resulting Trust',
-            'Constructive Trust (backup)'
-          ]
-        },
-        {
-          code: 'LA 3012',
-          name: 'Company Law',
-          optional: true,
-          pattern: 'Part A: Essay - Attempt one question from a choice of 4 | Part B: Problem - Attempt one question from a choice of 4. Choose more from either part.',
-          topics: [
-            'Forms of Business Organization',
-            'Separate Legal Personality',
-            'Lifting Veil of Incorporation',
-            'Management of the Company',
-            'Director Duties',
-            'Enforcing Director Duties',
-            'Statutory Minority Protection'
-          ]
-        },
-        {
-          code: 'LA 3011',
-          name: 'Alternative Dispute Resolution',
-          optional: true,
-          pattern: 'Part A: Compulsory | Part B: Attempt two problem questions from a choice of three | Part C: Attempt one essay question from a choice of two.',
-          topics: [
-            'Nature & Purpose of ADR',
-            'Negotiation',
-            'Mediation (VERY IMPORTANT)',
-            'Arbitration (MOST IMPORTANT)',
-            'Arbitration Law & Principles',
-            'Confidentiality & Without Prejudice Rule',
-            'ADR vs Litigation',
-            'Ethics in ADR'
-          ]
-        },
-        {
-          code: 'LA 3013',
-          name: 'Conflict of Laws',
-          optional: true,
-          pattern: 'Attempt three questions from a choice of six questions.',
-          topics: [
-            'Domicile',
-            'Jurisdiction',
-            'Choice of Law-Tort',
-            'Choice of Law Contract'
-          ]
-        },
-        {
-          code: 'LA 3014',
-          name: 'Criminology',
-          optional: true,
-          pattern: 'Attempt four questions from a choice of eight questions.',
-          topics: [
-            'Crime Theories (CORE)',
-            'Causes of Crime',
-            'Punishment & Sentencing',
-            'Policing & Social Control',
-            'Victimology'
-          ]
-        },
-        {
-          code: 'LA 3016',
-          name: 'Evidence',
-          optional: true,
-          pattern: 'Answer four questions from a choice of eight questions.',
-          topics: [
-            'Burden & Standard of Proof (CORE)',
-            'Admissibility of Evidence',
-            'Hearsay Evidence (VERY IMPORTANT)',
-            'Confessions',
-            'Character Evidence',
-            'Witnesses',
-            'Illegally Obtained Evidence'
-          ]
-        },
-        {
-          code: 'LA 3017',
-          name: 'Intellectual Property',
-          optional: true,
-          pattern: 'Answer three questions from a choice of six questions.',
-          topics: [
-            'Copyright (VERY IMPORTANT)',
-            'Patents',
-            'Trademarks',
-            'Defences & Exceptions',
-            'IP vs Public Access'
-          ]
-        },
-        {
-          code: 'LA 3018',
-          name: 'Public International Law',
-          optional: true,
-          pattern: 'Attempt four questions from a choice of eight questions.',
-          topics: [
-            'Sources of International Law (CORE)',
-            'State Responsibility (VERY IMPORTANT)',
-            'Use of Force',
-            'Jurisdiction',
-            'International Courts (ICJ)',
-            'Sovereignty vs Intervention'
-          ]
-        },
-        {
-          code: 'LA 3019',
-          name: 'Introduction to Islamic Law',
-          optional: true,
-          pattern: 'Part A: Essay - Attempt at least one | Part B: Problem - Attempt at least one. Choose the last question from either part.',
-          topics: [
-            'Essay: Primary Sources (Quran & Sunnah), Secondary Sources (Qiyas & Ijma), Istihsan, Istishab, Ijtihad, Usul-Al-Fiqh, Six Periods of Islamic History',
-            'Problem: Family Law (Marriage, Polygamy, Dissolution, Custody, Dowry, Maintenance), Penal Law (Hudud, Tazir, Qisas & Diyat), Financial Law (backup)'
-          ]
-        }
-      ]
+  </script>
+  <!-- Font Awesome (optional but safe) and Lucide is not needed, we use emojis / simple icons via HTML -->
+  <style>
+    /* Smooth scrolling and any fallback */
+    html {
+      scroll-behavior: smooth;
     }
-  };
+    body {
+      overflow-x: hidden;
+    }
+    /* Custom focus ring */
+    *:focus {
+      outline: none;
+      ring: 2px solid #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 antialiased">
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">UoL LLB Guide</h1>
-              <p className="text-blue-200 text-sm mt-1">Your Complete Exam Success Companion</p>
-            </div>
-            <BookOpen className="w-12 h-12 text-blue-300" />
+  <div class="min-h-screen">
+    <!-- Header with sticky behavior -->
+    <header class="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white sticky top-0 z-50 shadow-2xl">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight">UoL LLB Guide</h1>
+            <p class="text-blue-200 text-sm mt-1">Your Complete Exam Success Companion</p>
           </div>
-          
-          <nav className="mt-6 flex flex-wrap gap-2">
-            {['home', 'modules', 'exam-guidance', 'purchase', 'about', 'complaints'].map((section) => (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                  activeSection === section
-                    ? 'bg-white text-blue-900 shadow-lg transform scale-105'
-                    : 'bg-blue-800/50 hover:bg-blue-700 text-white'
-                }`}
-              >
-                {section.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </button>
-            ))}
-          </nav>
+          <!-- Book icon via simple SVG (replaces Lucide) -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
         </div>
-      </header>
+        
+        <nav class="mt-6 flex flex-wrap gap-2">
+          <button data-section="home" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-white text-blue-900 shadow-lg transform scale-105">Home</button>
+          <button data-section="modules" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-blue-800/50 hover:bg-blue-700 text-white">Modules</button>
+          <button data-section="exam-guidance" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-blue-800/50 hover:bg-blue-700 text-white">Exam Guidance</button>
+          <button data-section="purchase" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-blue-800/50 hover:bg-blue-700 text-white">Purchase</button>
+          <button data-section="about" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-blue-800/50 hover:bg-blue-700 text-white">About</button>
+          <button data-section="complaints" class="nav-btn px-4 py-2 rounded-lg transition-all duration-300 bg-blue-800/50 hover:bg-blue-700 text-white">Complaints</button>
+        </nav>
+      </div>
+    </header>
 
-      <main className="container mx-auto px-4 py-12">
-        {/* Home Section */}
-        <section id="home" className="mb-20">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-blue-600">
-            <h2 className="text-5xl font-bold text-slate-900 mb-6">Welcome to Your LLB Success Journey</h2>
-            <p className="text-xl text-slate-700 leading-relaxed mb-6">
-              This comprehensive guide is designed to help University of London LLB students navigate their academic journey with confidence. 
-              Access detailed information about exam structures, important topics, answer techniques, and study resources for all three levels.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 mt-8">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
-                <FileText className="w-10 h-10 text-blue-600 mb-3" />
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Complete Module Coverage</h3>
-                <p className="text-slate-700">All Level 4, 5, and 6 modules with exam patterns and important topics</p>
-              </div>
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl border-2 border-indigo-200">
-                <BookOpen className="w-10 h-10 text-indigo-600 mb-3" />
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Expert Exam Guidance</h3>
-                <p className="text-slate-700">IRAC, ILAC, and advanced techniques for problem and essay questions</p>
-              </div>
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border-2 border-purple-200">
-                <ShoppingCart className="w-10 h-10 text-purple-600 mb-3" />
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Premium Study Notes</h3>
-                <p className="text-slate-700">Affordable notes and custom question answers available for purchase</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Qualifying Degree Section */}
-        <section className="mb-20">
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl shadow-xl p-8 md:p-12 border-l-8 border-amber-500">
-            <div className="flex items-start gap-4">
-              <AlertCircle className="w-10 h-10 text-amber-600 flex-shrink-0 mt-1" />
-              <div>
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">Understanding Qualifying Degrees</h2>
-                <p className="text-lg text-slate-800 leading-relaxed">
-                  For a University of London LLB, the key thing to understand is that while subjects like <span className="font-semibold">Tort Law, Property Law, and European Union Law</span> form part of the traditional core of a Qualifying Law Degree, your choice of optional modules does not determine whether you can become a lawyer. Entry into the Solicitors Qualifying Examination or the Bar is based on passing professional training stages, not specific module selection.
-                </p>
-                <p className="text-lg text-slate-800 leading-relaxed mt-4">
-                  However, choosing academically strong and relevant modules can give you a real advantage in legal understanding, exam performance, and future preparation, even though it is not a strict requirement.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Modules Section */}
-        <section id="modules" className="mb-20">
-          <h2 className="text-5xl font-bold text-slate-900 mb-8 text-center">Module Directory</h2>
-          
-          {Object.entries(levels).map(([levelKey, level]) => (
-            <div key={levelKey} className="mb-8">
-              <button
-                onClick={() => setExpandedLevel(expandedLevel === levelKey ? null : levelKey)}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-between group"
-              >
-                <div className="text-left">
-                  <h3 className="text-3xl font-bold">{level.title}</h3>
-                  <p className="text-blue-100 mt-1">{level.price}</p>
-                </div>
-                <ChevronDown className={`w-8 h-8 transition-transform duration-300 ${expandedLevel === levelKey ? 'rotate-180' : ''}`} />
-              </button>
-
-              {expandedLevel === levelKey && (
-                <div className="mt-4 space-y-4 animate-fadeIn">
-                  {level.modules.map((module, idx) => (
-                    <div key={idx} className="bg-white rounded-2xl shadow-lg overflow-hidden border-l-4 border-blue-500">
-                      <button
-                        onClick={() => setExpandedModule(expandedModule === `${levelKey}-${idx}` ? null : `${levelKey}-${idx}`)}
-                        className="w-full p-6 text-left hover:bg-slate-50 transition-colors duration-200 flex items-center justify-between"
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                              {module.code}
-                            </span>
-                            {module.required && (
-                              <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                                Required
-                              </span>
-                            )}
-                            {module.optional && (
-                              <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold">
-                                Optional
-                              </span>
-                            )}
-                          </div>
-                          <h4 className="text-2xl font-bold text-slate-900">{module.name}</h4>
-                        </div>
-                        <ChevronDown className={`w-6 h-6 text-slate-600 transition-transform duration-300 ${expandedModule === `${levelKey}-${idx}` ? 'rotate-180' : ''}`} />
-                      </button>
-
-                      {expandedModule === `${levelKey}-${idx}` && (
-                        <div className="p-6 bg-slate-50 border-t border-slate-200">
-                          <div className="mb-4">
-                            <h5 className="text-lg font-bold text-slate-900 mb-2">📋 Exam Pattern:</h5>
-                            <p className="text-slate-700 leading-relaxed">{module.pattern}</p>
-                            {module.note && (
-                              <p className="text-amber-700 mt-2 italic">{module.note}</p>
-                            )}
-                          </div>
-                          
-                          {module.topics.length > 0 && (
-                            <div>
-                              <h5 className="text-lg font-bold text-slate-900 mb-3">🎯 Important Topics:</h5>
-                              <ul className="space-y-2">
-                                {module.topics.map((topic, topicIdx) => (
-                                  <li key={topicIdx} className="flex items-start gap-2">
-                                    <span className="text-blue-600 mt-1">▸</span>
-                                    <span className="text-slate-700">{topic}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </section>
-
-        {/* Exam Guidance Section */}
-        <section id="exam-guidance" className="mb-20">
-          <h2 className="text-5xl font-bold text-slate-900 mb-8 text-center">Exam Guidance & Techniques</h2>
-          
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Problem Questions */}
-            <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-green-500">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">⚖️ Problem Questions</h3>
-              
-              <div className="space-y-6">
-                <div>
-                  <h4 className="text-2xl font-bold text-green-700 mb-3">IRAC Method</h4>
-                  <div className="space-y-4">
-                    <div className="bg-green-50 p-4 rounded-xl">
-                      <h5 className="font-bold text-slate-900 mb-2">I - Issue</h5>
-                      <p className="text-slate-700 mb-2">Identify the legal question precisely</p>
-                      <p className="text-sm text-slate-600">❌ "Is there a trust?"</p>
-                      <p className="text-sm text-green-700">✅ "Whether the wording satisfies certainty of intention for a valid express trust"</p>
-                    </div>
-                    
-                    <div className="bg-green-50 p-4 rounded-xl">
-                      <h5 className="font-bold text-slate-900 mb-2">R - Rule</h5>
-                      <p className="text-slate-700">State the relevant legal principle with leading case authority and any tests or standards</p>
-                    </div>
-                    
-                    <div className="bg-green-50 p-4 rounded-xl border-2 border-green-500">
-                      <h5 className="font-bold text-slate-900 mb-2">A - Application (MOST IMPORTANT)</h5>
-                      <p className="text-slate-700 mb-2">Apply the rule directly to the facts. Use comparisons with case facts and logical reasoning.</p>
-                      <p className="text-sm font-semibold text-green-700">This is where most marks are won or lost.</p>
-                    </div>
-                    
-                    <div className="bg-green-50 p-4 rounded-xl">
-                      <h5 className="font-bold text-slate-900 mb-2">C - Conclusion</h5>
-                      <p className="text-slate-700">Give a clear, reasoned answer. Avoid vague conclusions like "it depends"</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-400">
-                  <h4 className="text-xl font-bold text-blue-900 mb-3">🔥 Advanced Tips</h4>
-                  <ul className="space-y-2 text-slate-700">
-                    <li><strong>ILAC:</strong> Issue - Law - Application - Conclusion (more depth)</li>
-                    <li><strong>MIRAT:</strong> Material Facts - Issue - Rule - Application - Tentative Conclusion</li>
-                    <li><strong>Key Rule:</strong> "Apply, Don't Recite" - Link every principle to facts</li>
-                    <li><strong>Issue-Spotting:</strong> Identify ALL possible legal issues</li>
-                    <li><strong>Layered Application:</strong> Main rule → Exceptions → Alternative outcomes</li>
-                  </ul>
-                </div>
-
-                <div className="bg-red-50 p-6 rounded-xl border-2 border-red-400">
-                  <h4 className="text-xl font-bold text-red-900 mb-3">⚠️ Common Mistakes to Avoid</h4>
-                  <ul className="space-y-2 text-slate-700">
-                    <li>❌ Writing long introductions</li>
-                    <li>❌ Explaining law with no application</li>
-                    <li>❌ Mixing multiple issues in one paragraph</li>
-                    <li>❌ No clear conclusions</li>
-                    <li>❌ Case dumping without relevance</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Essay Questions */}
-            <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-purple-500">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">📝 Essay Questions</h3>
-              
-              <div className="space-y-4">
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Discuss"</h4>
-                  <p className="text-slate-700 text-sm">Present multiple perspectives, explain accurately, engage in analysis (not just description), reach a reasoned conclusion</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"To What Extent"</h4>
-                  <p className="text-slate-700 text-sm mb-2">Explicitly evaluative - "How far is this statement true?"</p>
-                  <p className="text-slate-600 text-sm">Structure: Argument FOR → Argument AGAINST → Final judgment</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl border-2 border-purple-500">
-                  <h4 className="font-bold text-purple-900 mb-2">"Critically Analyse / Critically Evaluate"</h4>
-                  <p className="text-slate-700 text-sm mb-2">High-level writing (2:1 / First class territory)</p>
-                  <p className="text-slate-600 text-sm">Assess: Effectiveness, Fairness, Consistency, Policy implications</p>
-                  <p className="text-slate-600 text-sm mt-1">Include: Case law + academic opinion + judicial criticism + your reasoned stance</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Assess"</h4>
-                  <p className="text-slate-700 text-sm">Measure strengths and weaknesses, reach a clear judgment</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Explain"</h4>
-                  <p className="text-slate-700 text-sm">Provide clear, accurate account. Focus on legal principles and rules. Minimal evaluation required unless implied</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Analyse"</h4>
-                  <p className="text-slate-700 text-sm">Between explanation and critique. Break down into parts, show how principles interact, identify underlying reasoning</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Consider"</h4>
-                  <p className="text-slate-700 text-sm">Softer "discuss". Explore arguments, no strict conclusion requirement but still expected at UoL level</p>
-                </div>
-
-                <div className="bg-purple-50 p-5 rounded-xl">
-                  <h4 className="font-bold text-purple-900 mb-2">"Evaluate"</h4>
-                  <p className="text-slate-700 text-sm">Judge value or success. Requires criteria (fairness, certainty, efficiency)</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Purchase Section */}
-        <section id="purchase" className="mb-20">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-green-600">
-            <div className="flex items-center gap-4 mb-8">
-              <ShoppingCart className="w-12 h-12 text-green-600" />
-              <h2 className="text-5xl font-bold text-slate-900">Purchase Study Materials</h2>
-            </div>
-            
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl mb-8 text-center">
-              <p className="text-2xl font-bold">✅ Get structured, exam-ready answers for UoL papers</p>
-            </div>
-
-            {/* Module Notes Tiers */}
-            <div className="mb-12">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">📚 Module Notes</h3>
-              
-              <div className="grid lg:grid-cols-1 gap-6">
-                {/* Tier 1 - Basic */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-l-8 border-green-500">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
-                    <h4 className="text-2xl font-bold mb-2">🟢 TIER 1: BASIC (Entry Level)</h4>
-                    <p className="text-green-100">For students who just want cheap help to pass</p>
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h5 className="font-bold text-slate-900 mb-3">Includes:</h5>
-                      <ul className="space-y-2 text-slate-700">
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Concise exam-focused notes</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Key topics only (no deep explanations)</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Bullet-point summaries</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mt-6">
-                      <div className="bg-blue-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 4</p>
-                        <p className="text-2xl font-bold text-blue-600">PKR 1,500</p>
-                      </div>
-                      <div className="bg-indigo-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 5</p>
-                        <p className="text-2xl font-bold text-indigo-600">PKR 2,500</p>
-                      </div>
-                      <div className="bg-purple-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 6</p>
-                        <p className="text-2xl font-bold text-purple-600">PKR 3,500</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Question Answers Tiers */}
-            <div className="mb-12">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">❓ Paid Answers Model</h3>
-              
-              <div className="space-y-6">
-                {/* Tier 1 - Basic Answer */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-l-8 border-green-500">
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
-                    <h4 className="text-2xl font-bold mb-2">🟢 TIER 1: BASIC ANSWER</h4>
-                    <p className="text-green-100">For students who just want something to submit/pass</p>
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h5 className="font-bold text-slate-900 mb-3">Includes:</h5>
-                      <ul className="space-y-2 text-slate-700">
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Direct answer</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Basic structure</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>Minimal case law</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-green-600 mt-1">✓</span>
-                          <span>600–900 words</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mt-6">
-                      <div className="bg-green-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 4</p>
-                        <p className="text-2xl font-bold text-green-600">PKR 500</p>
-                      </div>
-                      <div className="bg-green-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 5</p>
-                        <p className="text-2xl font-bold text-green-600">PKR 700</p>
-                      </div>
-                      <div className="bg-green-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 6</p>
-                        <p className="text-2xl font-bold text-green-600">PKR 1,000</p>
-                      </div>
-                    </div>
-                    <p className="text-center text-slate-600 mt-4 font-semibold">👉 "Simple Pass Answer"</p>
-                  </div>
-                </div>
-
-                {/* Tier 2 - Standard Answer (Best Seller) */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-l-8 border-blue-500 ring-4 ring-blue-200">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-2xl font-bold mb-2">🔵 TIER 2: STANDARD ANSWER</h4>
-                        <p className="text-blue-100">This should be your main offering</p>
-                      </div>
-                      <span className="bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold text-sm">BEST SELLER 💰</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h5 className="font-bold text-slate-900 mb-3">Includes:</h5>
-                      <ul className="space-y-2 text-slate-700">
-                        <li className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-1">✓</span>
-                          <span>Proper IRAC / essay structure</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-1">✓</span>
-                          <span>Relevant case law</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-1">✓</span>
-                          <span>Clear arguments + application</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-blue-600 mt-1">✓</span>
-                          <span>900–1,500 words</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mt-6">
-                      <div className="bg-blue-50 p-4 rounded-xl text-center border-2 border-blue-300">
-                        <p className="text-sm text-slate-600 mb-1">Level 4</p>
-                        <p className="text-2xl font-bold text-blue-600">PKR 1,000</p>
-                      </div>
-                      <div className="bg-blue-50 p-4 rounded-xl text-center border-2 border-blue-300">
-                        <p className="text-sm text-slate-600 mb-1">Level 5</p>
-                        <p className="text-2xl font-bold text-blue-600">PKR 1,500</p>
-                      </div>
-                      <div className="bg-blue-50 p-4 rounded-xl text-center border-2 border-blue-300">
-                        <p className="text-sm text-slate-600 mb-1">Level 6</p>
-                        <p className="text-2xl font-bold text-blue-600">PKR 2,000</p>
-                      </div>
-                    </div>
-                    <p className="text-center text-slate-600 mt-4 font-semibold">👉 "Exam-Ready Answer"</p>
-                  </div>
-                </div>
-
-                {/* Tier 3 - Premium Answer */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-l-8 border-red-500">
-                  <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-2xl font-bold mb-2">🔴 TIER 3: PREMIUM ANSWER</h4>
-                        <p className="text-red-100">For serious students aiming higher marks</p>
-                      </div>
-                      <span className="bg-white text-red-600 px-4 py-2 rounded-full font-bold text-sm">HIGH VALUE 🔥</span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h5 className="font-bold text-slate-900 mb-3">Includes:</h5>
-                      <ul className="space-y-2 text-slate-700">
-                        <li className="flex items-start gap-2">
-                          <span className="text-red-600 mt-1">✓</span>
-                          <span>Everything in Standard</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-red-600 mt-1">✓</span>
-                          <span>Strong case law integration</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-red-600 mt-1">✓</span>
-                          <span>Critical analysis + evaluation</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-red-600 mt-1">✓</span>
-                          <span>Polished structure (First-class style)</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-red-600 mt-1">✓</span>
-                          <span>1,500–2,500 words</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="grid grid-cols-3 gap-4 mt-6">
-                      <div className="bg-red-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 4</p>
-                        <p className="text-2xl font-bold text-red-600">PKR 1,500</p>
-                      </div>
-                      <div className="bg-red-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 5</p>
-                        <p className="text-2xl font-bold text-red-600">PKR 2,500</p>
-                      </div>
-                      <div className="bg-red-50 p-4 rounded-xl text-center">
-                        <p className="text-sm text-slate-600 mb-1">Level 6</p>
-                        <p className="text-2xl font-bold text-red-600">PKR 3,500</p>
-                      </div>
-                    </div>
-                    <p className="text-center text-slate-600 mt-4 font-semibold">👉 "High-Scoring Model Answer"</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bundle Pricing */}
-            <div className="mb-12">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">📦 Bundle Pricing</h3>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* 4 Answers Pack */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-purple-500">
-                  <h4 className="text-xl font-bold text-slate-900 mb-4">🔹 4 Answers Pack</h4>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                      <span className="text-slate-700">Level 4</span>
-                      <span className="font-bold text-purple-600">PKR 2,500</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                      <span className="text-slate-700">Level 5</span>
-                      <span className="font-bold text-purple-600">PKR 4,000</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
-                      <span className="text-slate-700">Level 6</span>
-                      <span className="font-bold text-purple-600">PKR 6,000</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6 Answers Pack - Best Value */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-yellow-500 ring-4 ring-yellow-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-bold text-slate-900">🔹 6 Answers Pack</h4>
-                    <span className="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold">BEST VALUE</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg border-2 border-yellow-300">
-                      <span className="text-slate-700">Level 4</span>
-                      <span className="font-bold text-yellow-700">PKR 4,000</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg border-2 border-yellow-300">
-                      <span className="text-slate-700">Level 5</span>
-                      <span className="font-bold text-yellow-700">PKR 6,500</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg border-2 border-yellow-300">
-                      <span className="text-slate-700">Level 6</span>
-                      <span className="font-bold text-yellow-700">PKR 10,000</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 10 Answers Pack */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-indigo-500">
-                  <h4 className="text-xl font-bold text-slate-900 mb-4">🔹 10 Answers Pack</h4>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg">
-                      <span className="text-slate-700">Level 4</span>
-                      <span className="font-bold text-indigo-600">PKR 7,500</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg">
-                      <span className="text-slate-700">Level 5</span>
-                      <span className="font-bold text-indigo-600">PKR 12,000</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-lg">
-                      <span className="text-slate-700">Level 6</span>
-                      <span className="font-bold text-indigo-600">PKR 18,000</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Add-Ons */}
-            <div className="mb-12">
-              <h3 className="text-3xl font-bold text-slate-900 mb-6">💸 Add-Ons (Upsell)</h3>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-orange-500">
-                  <h4 className="text-xl font-bold text-slate-900 mb-3">⚡ Urgent Delivery (12–24 hrs)</h4>
-                  <p className="text-3xl font-bold text-orange-600">PKR 500 – 1,000</p>
-                </div>
-                <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-pink-500">
-                  <h4 className="text-xl font-bold text-slate-900 mb-3">✍️ Extra Length / Deep Analysis</h4>
-                  <p className="text-3xl font-bold text-pink-600">PKR 500 – 1,500</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Important Rules */}
-            <div className="bg-red-50 p-6 rounded-2xl border-2 border-red-300 mb-8">
-              <h3 className="text-xl font-bold text-red-900 mb-4">⚠️ IMPORTANT RULES</h3>
-              <ul className="space-y-2 text-slate-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 mt-1">⛔</span>
-                  <span>Word limit per tier must be respected</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 mt-1">⛔</span>
-                  <span>Standard delivery time: 24–48 hours</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 mt-1">⛔</span>
-                  <span>Extra charges apply for urgent work</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Order Form for Notes */}
-            <form action="https://formspree.io/f/mqenoeov" method="POST" className="bg-white p-8 rounded-2xl shadow-xl mb-8">
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">📝 Order Notes</h3>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Level</label>
-                  <select
-                    name="level"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
-                  >
-                    <option value="">Select Level</option>
-                    <option value="level4">Level 4</option>
-                    <option value="level5">Level 5</option>
-                    <option value="level6">Level 6</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Module Name</label>
-                  <input
-                    type="text"
-                    name="module"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
-                    placeholder="e.g., Contract Law, Tort Law, etc."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Additional Information</label>
-                  <textarea
-                    name="additional_info"
-                    rows="3"
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
-                    placeholder="Any additional details or special requests..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300"
-                >
-                  Submit Notes Order
-                </button>
-              </div>
-            </form>
-
-            {/* Question Submission Form */}
-            <form action="https://formspree.io/f/xgodbanw" method="POST" className="bg-white p-8 rounded-2xl shadow-xl">
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">❓ Submit Questions for Answers</h3>
-              <p className="text-slate-600 mb-6">Submit up to 10 questions at once</p>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Level</label>
-                  <select
-                    name="level"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  >
-                    <option value="">Select Level</option>
-                    <option value="level4">Level 4</option>
-                    <option value="level5">Level 5</option>
-                    <option value="level6">Level 6</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Answer Tier</label>
-                  <select
-                    name="answer_tier"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  >
-                    <option value="">Select Tier</option>
-                    <option value="basic">Basic Answer (Simple Pass)</option>
-                    <option value="standard">Standard Answer (Exam-Ready) - BEST SELLER</option>
-                    <option value="premium">Premium Answer (High-Scoring)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Bundle or Single Question</label>
-                  <select
-                    name="bundle_type"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                  >
-                    <option value="">Select Option</option>
-                    <option value="single">Single Question</option>
-                    <option value="bundle-4">4 Answers Pack</option>
-                    <option value="bundle-6">6 Answers Pack (BEST VALUE)</option>
-                    <option value="bundle-10">10 Answers Pack</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Module Name(s)</label>
-                  <input
-                    type="text"
-                    name="modules"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                    placeholder="e.g., Contract Law, Tort Law, etc."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Your Question(s)</label>
-                  <textarea
-                    name="questions"
-                    required
-                    rows="8"
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                    placeholder="Paste your question(s) here. If multiple questions, number them (1, 2, 3, etc.). Maximum 10 questions per submission."
-                  ></textarea>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Add-Ons (Optional)</label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" name="urgent_delivery" value="yes" className="w-4 h-4 text-blue-600" />
-                      <span className="text-slate-700">Urgent Delivery (12-24 hrs) - PKR 500-1,000</span>
-                    </label>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" name="extra_analysis" value="yes" className="w-4 h-4 text-blue-600" />
-                      <span className="text-slate-700">Extra Length / Deep Analysis - PKR 500-1,500</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Additional Instructions</label>
-                  <textarea
-                    name="additional_instructions"
-                    rows="3"
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-                    placeholder="Any specific requirements or preferences..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300"
-                >
-                  Submit Question(s) for Answers
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section id="about" className="mb-20">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-blue-600">
-            <div className="flex items-center gap-4 mb-6">
-              <User className="w-12 h-12 text-blue-600" />
-              <h2 className="text-5xl font-bold text-slate-900">About the Founder</h2>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg">
-              <p className="text-lg text-slate-700 leading-relaxed mb-6">
-                This platform was created by a University of London LLB graduate who understands the challenges faced by students navigating this demanding program. Having experienced the difficulties firsthand, the founder is committed to providing comprehensive guidance and resources to help current students achieve their academic goals.
-              </p>
-              
-              <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Mission Statement</h3>
-                <p className="text-slate-700 leading-relaxed">
-                  To better guide University of London LLB students so they don't have to face the same problems and uncertainties. By sharing structured exam guidance, important topics, and affordable study materials, this platform aims to empower students at all levels to excel in their studies and confidently approach their examinations.
-                </p>
-              </div>
-
-              <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-2 border-green-300">
-                <h3 className="text-xl font-bold text-slate-900 mb-4">📞 Contact Information</h3>
-                <div className="flex items-center gap-3">
-                  <Mail className="w-6 h-6 text-green-600" />
-                  <a href="mailto:umairahmad7643@gmail.com" className="text-lg text-green-700 hover:text-green-900 font-semibold hover:underline transition-colors">
-                    umairahmad7643@gmail.com
-                  </a>
-                </div>
-                <p className="text-slate-600 mt-3 text-sm">
-                  For Francis Ng articles (Tort Law & Equity and Trusts), contact via the email above.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Complaints Section */}
-        <section id="complaints" className="mb-20">
-          <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-red-600">
-            <div className="flex items-center gap-4 mb-6">
-              <MessageSquare className="w-12 h-12 text-red-600" />
-              <h2 className="text-5xl font-bold text-slate-900">Submit a Complaint</h2>
-            </div>
-            
-            <p className="text-lg text-slate-700 mb-8">
-              If you've found any errors or inaccuracies regarding any module information on this website, please let us know. Your feedback helps us maintain the quality and accuracy of our resources.
-            </p>
-
-            <form action="https://formspree.io/f/mwvyjvdn" method="POST" className="bg-white p-8 rounded-2xl shadow-xl">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
-                    placeholder="Enter your name"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Module / Section</label>
-                  <input
-                    type="text"
-                    name="module"
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
-                    placeholder="Which module or section has an error?"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-slate-900 font-semibold mb-2">Description of Error</label>
-                  <textarea
-                    name="complaint"
-                    required
-                    rows="6"
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-red-500 focus:ring-2 focus:ring-red-200 outline-none transition-all"
-                    placeholder="Please describe the error or issue in detail..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-red-600 to-orange-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-300"
-                >
-                  Submit Complaint
-                </button>
-              </div>
-            </form>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-2xl font-bold mb-2">UoL LLB Guide</h3>
-          <p className="text-blue-200 mb-4">Empowering University of London LLB Students</p>
-          <p className="text-sm text-blue-300">
-            © 2024 UoL LLB Guide. Created to help students succeed in their legal education journey.
+    <main class="container mx-auto px-4 py-12">
+      <!-- HOME Section -->
+      <section id="home" class="mb-20 scroll-mt-24">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-blue-600">
+          <h2 class="text-5xl font-bold text-slate-900 mb-6">Welcome to Your LLB Success Journey</h2>
+          <p class="text-xl text-slate-700 leading-relaxed mb-6">
+            This comprehensive guide is designed to help University of London LLB students navigate their academic journey with confidence. 
+            Access detailed information about exam structures, important topics, answer techniques, and study resources for all three levels.
           </p>
-          <div className="mt-6">
-            <a href="mailto:umairahmad7643@gmail.com" className="inline-flex items-center gap-2 text-blue-200 hover:text-white transition-colors">
-              <Mail className="w-5 h-5" />
-              umairahmad7643@gmail.com
-            </a>
+          <div class="grid md:grid-cols-3 gap-6 mt-8">
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">Complete Module Coverage</h3>
+              <p class="text-slate-700">All Level 4, 5, and 6 modules with exam patterns and important topics</p>
+            </div>
+            <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl border-2 border-indigo-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-indigo-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">Expert Exam Guidance</h3>
+              <p class="text-slate-700">IRAC, ILAC, and advanced techniques for problem and essay questions</p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-xl border-2 border-purple-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-purple-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 15v6" /></svg>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">Premium Study Notes</h3>
+              <p class="text-slate-700">Affordable notes and custom question answers available for purchase</p>
+            </div>
           </div>
         </div>
-      </footer>
+      </section>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+      <!-- Qualifying Degree Section -->
+      <section class="mb-20">
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl shadow-xl p-8 md:p-12 border-l-8 border-amber-500">
+          <div class="flex items-start gap-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-amber-600 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <div>
+              <h2 class="text-3xl font-bold text-slate-900 mb-4">Understanding Qualifying Degrees</h2>
+              <p class="text-lg text-slate-800 leading-relaxed">
+                For a University of London LLB, the key thing to understand is that while subjects like <span class="font-semibold">Tort Law, Property Law, and European Union Law</span> form part of the traditional core of a Qualifying Law Degree, your choice of optional modules does not determine whether you can become a lawyer. Entry into the Solicitors Qualifying Examination or the Bar is based on passing professional training stages, not specific module selection.
+              </p>
+              <p class="text-lg text-slate-800 leading-relaxed mt-4">
+                However, choosing academically strong and relevant modules can give you a real advantage in legal understanding, exam performance, and future preparation, even though it is not a strict requirement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
+      <!-- MODULES Section (dynamic via JS but we can hardcode with interactivity) -->
+      <section id="modules" class="mb-20 scroll-mt-24">
+        <h2 class="text-5xl font-bold text-slate-900 mb-8 text-center">Module Directory</h2>
+        <div id="modules-container" class="space-y-8"></div>
+      </section>
+
+      <!-- EXAM GUIDANCE Section -->
+      <section id="exam-guidance" class="mb-20 scroll-mt-24">
+        <h2 class="text-5xl font-bold text-slate-900 mb-8 text-center">Exam Guidance & Techniques</h2>
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Problem Questions -->
+          <div class="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-green-500">
+            <h3 class="text-3xl font-bold text-slate-900 mb-6">⚖️ Problem Questions</h3>
+            <div class="space-y-6">
+              <div><h4 class="text-2xl font-bold text-green-700 mb-3">IRAC Method</h4>
+                <div class="space-y-4"><div class="bg-green-50 p-4 rounded-xl"><h5 class="font-bold">I - Issue</h5><p>Identify the legal question precisely</p><p class="text-sm text-green-700">✅ "Whether the wording satisfies certainty of intention for a valid express trust"</p></div>
+                <div class="bg-green-50 p-4 rounded-xl"><h5 class="font-bold">R - Rule</h5><p>State the relevant legal principle with leading case authority.</p></div>
+                <div class="bg-green-50 p-4 rounded-xl border-2 border-green-500"><h5 class="font-bold">A - Application (MOST IMPORTANT)</h5><p>Apply the rule directly to the facts. This is where marks are won.</p></div>
+                <div class="bg-green-50 p-4 rounded-xl"><h5 class="font-bold">C - Conclusion</h5><p>Give a clear, reasoned answer.</p></div></div>
+              </div>
+              <div class="bg-blue-50 p-6 rounded-xl"><h4 class="font-bold text-xl">🔥 Advanced Tips</h4><ul class="list-disc pl-5"><li>ILAC: Issue - Law - Application - Conclusion</li><li>MIRAT: Material Facts - Issue - Rule - Application - Tentative Conclusion</li><li>"Apply, Don't Recite" - Link every principle to facts</li></ul></div>
+            </div>
+          </div>
+          <!-- Essay Questions -->
+          <div class="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-purple-500">
+            <h3 class="text-3xl font-bold text-slate-900 mb-6">📝 Essay Questions</h3>
+            <div class="space-y-4">
+              <div class="bg-purple-50 p-5 rounded-xl"><h4 class="font-bold">"Discuss"</h4><p>Present multiple perspectives, engage in analysis, reach reasoned conclusion.</p></div>
+              <div class="bg-purple-50 p-5 rounded-xl"><h4 class="font-bold">"To What Extent"</h4><p>Explicitly evaluative - argument FOR → AGAINST → final judgment.</p></div>
+              <div class="bg-purple-50 p-5 rounded-xl"><h4 class="font-bold">"Critically Analyse"</h4><p>Assess effectiveness, fairness, policy implications, include case law + academic opinion.</p></div>
+              <div class="bg-purple-50 p-5 rounded-xl"><h4 class="font-bold">"Assess / Evaluate"</h4><p>Measure strengths and weaknesses, judge value.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PURCHASE Section (static but functional forms) -->
+      <section id="purchase" class="mb-20 scroll-mt-24">
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-green-600">
+          <div class="flex items-center gap-4 mb-8"><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 15v6" /></svg><h2 class="text-5xl font-bold text-slate-900">Purchase Study Materials</h2></div>
+          <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl mb-8 text-center"><p class="text-2xl font-bold">✅ Get structured, exam-ready answers for UoL papers</p></div>
+          
+          <!-- Simple summary -->
+          <div class="text-slate-700 bg-white p-6 rounded-xl mb-8">
+            <p class="font-bold text-lg">📌 Notes & Answer Tiers available: Basic, Standard (Best Seller), Premium. Contact via email for custom orders and bundle discounts (4/6/10 answers packs).</p>
+            <p class="mt-2">📧 Orders & inquiries: <a href="mailto:umairahmad7643@gmail.com" class="text-blue-600 underline">umairahmad7643@gmail.com</a></p>
+            <p class="mt-1">💰 Level 4 notes start at 1500 PKR per module. Answer tiers: Basic 500-1000 PKR, Standard 1000-2000 PKR, Premium 1500-3500 PKR.</p>
+          </div>
+
+          <!-- Order forms (Formspree) -->
+          <div class="grid md:grid-cols-2 gap-8">
+            <form action="https://formspree.io/f/mqenoeov" method="POST" class="bg-white p-6 rounded-2xl shadow-xl">
+              <h3 class="text-2xl font-bold mb-4">📝 Order Notes</h3>
+              <input type="text" name="name" placeholder="Your Name" required class="w-full mb-3 p-3 border rounded-xl"><input type="email" name="email" placeholder="Email" required class="w-full mb-3 p-3 border rounded-xl"><input type="text" name="module" placeholder="Module Name" required class="w-full mb-3 p-3 border rounded-xl"><textarea name="additional_info" rows="2" placeholder="Level & details" class="w-full mb-3 p-3 border rounded-xl"></textarea><button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">Submit Notes Order</button>
+            </form>
+            <form action="https://formspree.io/f/xgodbanw" method="POST" class="bg-white p-6 rounded-2xl shadow-xl">
+              <h3 class="text-2xl font-bold mb-4">❓ Submit Questions for Answers</h3>
+              <input type="text" name="name" placeholder="Your Name" required class="w-full mb-3 p-3 border rounded-xl"><input type="email" name="email" placeholder="Email" required class="w-full mb-3 p-3 border rounded-xl"><select name="level" class="w-full mb-3 p-3 border rounded-xl"><option>Level 4</option><option>Level 5</option><option>Level 6</option></select><textarea name="questions" rows="4" placeholder="Paste your question(s)" required class="w-full mb-3 p-3 border rounded-xl"></textarea><button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Submit for Answers</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT Section -->
+      <section id="about" class="mb-20 scroll-mt-24">
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-blue-600">
+          <div class="flex items-center gap-4 mb-6"><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><h2 class="text-5xl font-bold text-slate-900">About the Founder</h2></div>
+          <div class="bg-white p-8 rounded-2xl shadow-lg"><p class="text-lg text-slate-700">Created by a University of London LLB graduate who understands the challenges. Committed to providing comprehensive guidance. For Francis Ng articles (Tort Law & Equity and Trusts), contact via email.</p>
+          <div class="mt-6 p-4 bg-green-50 rounded-xl"><h3 class="font-bold">📞 Contact: <a href="mailto:umairahmad7643@gmail.com" class="text-green-700 underline">umairahmad7643@gmail.com</a></h3></div></div>
+        </div>
+      </section>
+
+      <!-- COMPLAINTS Section -->
+      <section id="complaints" class="mb-20 scroll-mt-24">
+        <div class="bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl shadow-2xl p-8 md:p-12 border-t-4 border-red-600">
+          <div class="flex items-center gap-4 mb-6"><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg><h2 class="text-5xl font-bold text-slate-900">Submit a Complaint</h2></div>
+          <form action="https://formspree.io/f/mwvyjvdn" method="POST" class="bg-white p-8 rounded-2xl shadow-xl"><input type="text" name="name" placeholder="Your Name" required class="w-full mb-4 p-3 border rounded-xl"><input type="email" name="email" placeholder="Email" required class="w-full mb-4 p-3 border rounded-xl"><input type="text" name="module" placeholder="Module/Section" required class="w-full mb-4 p-3 border rounded-xl"><textarea name="complaint" rows="5" placeholder="Describe error" required class="w-full mb-4 p-3 border rounded-xl"></textarea><button type="submit" class="w-full bg-red-600 text-white py-3 rounded-xl font-bold">Submit Complaint</button></form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white py-12">
+      <div class="container mx-auto px-4 text-center"><h3 class="text-2xl font-bold mb-2">UoL LLB Guide</h3><p class="text-blue-200">Empowering University of London LLB Students</p><p class="text-sm mt-4">© 2025 UoL LLB Guide. All rights reserved.</p><div class="mt-4"><a href="mailto:umairahmad7643@gmail.com" class="inline-flex gap-2 text-blue-200 hover:text-white">📧 umairahmad7643@gmail.com</a></div></div>
+    </footer>
+  </div>
+
+  <!-- JavaScript for dynamic modules and active section highlighting -->
+  <script>
+    // Module data
+    const levelsData = {
+      level4: { title: 'Level 4 (Year 1)', price: '1500 PKR per module', modules: [{ code: 'LA 1040', name: 'Contract Law', pattern: 'Attempt four questions from a choice of eight questions.', topics: ['Offer and Acceptance','Intention','Consideration','Misrepresentation','Mistake','Frustration','Breach of Contract'] },{ code: 'LA 1010', name: 'Criminal Law', pattern: 'Part A: Compulsory Question | Part B: Attempt three questions.', topics: ['Actus Reus & Mens Rea','Rape','Offences Against Persons','Property Offences','Criminal Damage','Criminal Attempt','Participation in Crime'] },{ code: 'LA 1020', name: 'Public Law', pattern: 'Part A: Compulsory | Part B: Attempt three from seven.', topics: ['Rule of Law','Parliamentary Sovereignty','Royal Prerogative','Human Rights Act','Judicial Review'] },{ code: 'LA 1031', name: 'Legal System and Method', pattern: 'Part A: MCQs | Part B: Attempt two questions', topics: ['Judicial Precedent','Statutory Interpretation'] }] },
+      level5: { title: 'Level 5 (Year 2)', price: '2000 PKR per module', modules: [{ code: 'LA 2001', name: 'Tort Law', pattern: 'Part A: Compulsory | Part B: Attempt three from eight', topics: ['Negligence','Psychiatric Harm','Pure Economic Loss','Occupiers Liability','Vicarious Liability','Nuisance'] },{ code: 'LA 2003', name: 'Property Law', pattern: 'Part A & B mix', topics: ['Unregistered/Registered Land','Adverse Possession','Easements','Mortgage','Co-ownership'] },{ code: 'LA 2024', name: 'EU Law', required: true, pattern: 'Answer four from eight', topics: ['Direct Effect','Free Movement','Preliminary Referencing'] },{ code: 'LA 2029', name: 'International Protection of Human Rights', optional: true, pattern: 'Attempt three from seven', topics: ['Universalism vs Culturalism','Women Rights','Refugee Rights'] }] },
+      level6: { title: 'Level 6 (Final Year)', price: '2500 PKR per module', modules: [{ code: 'LA 1011', name: 'Jurisprudence', required: true, pattern: 'Part A Compulsory | Part B three from nine', topics: ['Naturalism','Liberalism','Command Theory','Marxism','Feminism'] },{ code: 'LA 3015', name: 'Equity and Trusts', optional: true, pattern: 'Part A Compulsory article | Part B three from eight', topics: ['Three Certainties','Charitable Trusts','Resulting Trust','Constructive Trust'] },{ code: 'LA 3012', name: 'Company Law', optional: true, pattern: 'Essay & Problem', topics: ['Separate Legal Personality','Director Duties','Minority Protection'] },{ code: 'LA 3011', name: 'Alternative Dispute Resolution', optional: true, pattern: 'Compulsory + problems', topics: ['Mediation','Arbitration','ADR vs Litigation'] }] }
+    };
+
+    let expandedLevel = null;
+    let expandedModuleKey = null;
+
+    function renderModules() {
+      const container = document.getElementById('modules-container');
+      if (!container) return;
+      container.innerHTML = '';
+      for (const [levelKey, level] of Object.entries(levelsData)) {
+        const levelDiv = document.createElement('div');
+        levelDiv.className = 'mb-8';
+        const btn = document.createElement('button');
+        btn.className = 'w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-between group';
+        btn.innerHTML = `<div class="text-left"><h3 class="text-3xl font-bold">${level.title}</h3><p class="text-blue-100 mt-1">${level.price}</p></div><svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 transition-transform duration-300 ${expandedLevel === levelKey ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>`;
+        btn.addEventListener('click', () => {
+          expandedLevel = expandedLevel === levelKey ? null : levelKey;
+          renderModules();
+        });
+        levelDiv.appendChild(btn);
+        if (expandedLevel === levelKey) {
+          const modulesContainer = document.createElement('div');
+          modulesContainer.className = 'mt-4 space-y-4 animate-fadeIn';
+          level.modules.forEach((mod, idx) => {
+            const modCard = document.createElement('div');
+            modCard.className = 'bg-white rounded-2xl shadow-lg overflow-hidden border-l-4 border-blue-500';
+            const modBtn = document.createElement('button');
+            modBtn.className = 'w-full p-6 text-left hover:bg-slate-50 transition-colors flex items-center justify-between';
+            const isExpanded = expandedModuleKey === `${levelKey}-${idx}`;
+            modBtn.innerHTML = `<div class="flex-1"><div class="flex gap-2 mb-2"><span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">${mod.code}</span>${mod.required ? '<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Required</span>' : ''}${mod.optional ? '<span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-sm font-semibold">Optional</span>' : ''}</div><h4 class="text-2xl font-bold text-slate-900">${mod.name}</h4></div><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-600 transition-transform ${isExpanded ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>`;
+            modBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              expandedModuleKey = expandedModuleKey === `${levelKey}-${idx}` ? null : `${levelKey}-${idx}`;
+              renderModules();
+            });
+            modCard.appendChild(modBtn);
+            if (isExpanded) {
+              const detailsDiv = document.createElement('div');
+              detailsDiv.className = 'p-6 bg-slate-50 border-t border-slate-200';
+              detailsDiv.innerHTML = `<div class="mb-4"><h5 class="text-lg font-bold mb-2">📋 Exam Pattern:</h5><p class="text-slate-700">${mod.pattern}</p></div><div><h5 class="text-lg font-bold mb-3">🎯 Important Topics:</h5><ul class="space-y-2">${mod.topics.map(t => `<li class="flex gap-2"><span class="text-blue-600">▸</span><span class="text-slate-700">${t}</span></li>`).join('')}</ul></div>`;
+              modCard.appendChild(detailsDiv);
+            }
+            modulesContainer.appendChild(modCard);
+          });
+          levelDiv.appendChild(modulesContainer);
         }
-      `}</style>
-    </div>
-  );
-}
+        container.appendChild(levelDiv);
+      }
+    }
+
+    // Active section highlight & smooth scroll
+    const sections = ['home', 'modules', 'exam-guidance', 'purchase', 'about', 'complaints'];
+    const navBtns = document.querySelectorAll('.nav-btn');
+    function updateActiveSection() {
+      const scrollPos = window.scrollY + 150;
+      let current = 'home';
+      for (const sec of sections) {
+        const el = document.getElementById(sec);
+        if (el && el.offsetTop <= scrollPos) current = sec;
+      }
+      navBtns.forEach(btn => {
+        const section = btn.getAttribute('data-section');
+        if (section === current) {
+          btn.classList.remove('bg-blue-800/50', 'hover:bg-blue-700');
+          btn.classList.add('bg-white', 'text-blue-900', 'shadow-lg', 'transform', 'scale-105');
+        } else {
+          btn.classList.remove('bg-white', 'text-blue-900', 'shadow-lg', 'transform', 'scale-105');
+          btn.classList.add('bg-blue-800/50', 'hover:bg-blue-700', 'text-white');
+        }
+      });
+    }
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sectionId = btn.getAttribute('data-section');
+        const target = document.getElementById(sectionId);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+    window.addEventListener('scroll', updateActiveSection);
+    window.addEventListener('load', () => {
+      renderModules();
+      updateActiveSection();
+    });
+  </script>
+</body>
+</html>
